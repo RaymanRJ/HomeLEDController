@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ main, development ]
+    branches: [ main, development, CICD-GitubActions ]
   workflow_dispatch:
 jobs:
   build:
