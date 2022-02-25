@@ -1,7 +1,7 @@
 from typing import Dict, Tuple
 
-from app.states.LEDState import LEDState
-from app.states.State import State
+from states.LEDState import LEDState
+from states.State import State
 
 
 class StateManager:

@@ -1,9 +1,9 @@
 from typing import Dict
 
-from app.models.LED import LED
-from app.models.LEDCabinet import LEDCabinet
-from app.models.LEDStrip import LEDStrip
-from app.states.ChangeSet import ChangeSet, Change
+from models.LED import LED
+from models.LEDCabinet import LEDCabinet
+from models.LEDStrip import LEDStrip
+from states.ChangeSet import ChangeSet, Change
 
 
 class LEDChange(Change):

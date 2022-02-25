@@ -1,11 +1,11 @@
-from typing import List, Dict
+from typing import Dict
 
-from app.models.LEDCabinet import LEDCabinet
-from app.models.LEDCabinetLocation import LEDCabinetLocation
-from app.models.LEDStrip import LEDStrip
-from app.models.LEDStripLocation import LEDStripLocation
-from app.states.LEDChangeSet import LEDChangeSet, LEDChange
-from app.states.State import State
+from models.LEDCabinet import LEDCabinet
+from models.LEDCabinetLocation import LEDCabinetLocation
+from models.LEDStrip import LEDStrip
+from models.LEDStripLocation import LEDStripLocation
+from states.LEDChangeSet import LEDChangeSet, LEDChange
+from states.State import State
 
 
 class LEDState(State):

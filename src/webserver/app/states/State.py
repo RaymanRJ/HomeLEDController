@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Dict
 
-from app.states.ChangeSet import ChangeSet
+from states.ChangeSet import ChangeSet
 
 
 class State:
