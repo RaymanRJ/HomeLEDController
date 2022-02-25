@@ -8,12 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Build web-server
         working-directory: ./src/webserver
         run: |
           build_number=${{github.run_number}}
+          commit_hash=${{ github.sha }}
           sudo docker build -t webserver .
-          sudo docker tag webserver $build_number
+          sudo docker tag webserver $build_number-$commit_hash
           sudo docker images
 
 
