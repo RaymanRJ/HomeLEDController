@@ -1,0 +1,13 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build web-server
+        run: docker build -t webserver -f ./src/webserver/Dockerfile
