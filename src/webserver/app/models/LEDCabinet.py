@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from app.models.LEDStripLocation import LEDStripLocation
 from app.models.LEDCabinetLocation import LEDCabinetLocation
@@ -6,15 +6,13 @@ from app.models.LEDStrip import LEDStrip
 
 
 class LEDCabinet:
-    __led_strip_locations: Dict[LEDStrip, LEDStripLocation]
-    __cabinet_location: LEDCabinetLocation
+    __led_strip_locations: Dict[LEDStripLocation, LEDStrip]
 
-    def __init__(self, cabinet_location: LEDCabinetLocation, led_strip_location_dict: Dict[LEDStrip, LEDStripLocation]):
+    def __init__(self, led_strip_location_dict: Dict[LEDStripLocation, LEDStrip]):
         self.__led_strip_locations = led_strip_location_dict
-        self.__cabinet_location = cabinet_location
 
     @property
-    def cabinet_id(self) -> LEDCabinetLocation: return self.__cabinet_location
-    @property
-    def led_strip_and_locations(self) -> Dict[LEDStrip, LEDStripLocation]: return self.__led_strip_locations
+    def led_strips(self) -> List[LEDStrip]: return list(self.__led_strip_locations.values())
 
+    def led_strip(self, led_strip_location: LEDStripLocation) -> LEDStrip:
+        return self.__led_strip_locations[led_strip_location]

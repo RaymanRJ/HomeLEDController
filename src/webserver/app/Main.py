@@ -4,19 +4,14 @@ from app.states.StateManager import StateManager
 
 app = Flask(__name__)
 
-LEDStateManager = StateManager()
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+state_manager = StateManager()
 
 
 @app.route('/updateLEDs', methods=['POST'])
 def update_LEDs():
     return make_response(
         jsonify(
-            LEDStateManager.update_state(request.get_json())
+            state_manager.update_state(request.get_json())
         )
     )
 
@@ -31,4 +26,3 @@ def health_check():
 
 if __name__ == "__main__":
     app.run()
-
