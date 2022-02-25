@@ -1,8 +1,7 @@
 from typing import Dict, List
 
-from app.models.LEDStripLocation import LEDStripLocation
-from app.models.LEDCabinetLocation import LEDCabinetLocation
-from app.models.LEDStrip import LEDStrip
+from models.LEDStripLocation import LEDStripLocation
+from models.LEDStrip import LEDStrip
 
 
 class LEDCabinet:

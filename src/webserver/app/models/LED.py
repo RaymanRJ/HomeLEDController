@@ -14,6 +14,6 @@ class LED:
     @property
     def brightness(self) -> int: return self.__brightness
 
-    def update(self, update_details: List[int, int, int, int]):
+    def update(self, update_details: List[int]):
         self.__color = (update_details[0], update_details[1], update_details[2])
         self.__brightness = update_details[3]

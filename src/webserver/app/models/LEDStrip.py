@@ -1,6 +1,6 @@
 from typing import List
 
-from app.models.LED import LED
+from models.LED import LED
 
 
 class LEDStrip:

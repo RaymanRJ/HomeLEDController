@@ -1,6 +1,6 @@
 from flask import Flask, make_response, jsonify, request
 
-from app.states.StateManager import StateManager
+from states.StateManager import StateManager
 
 app = Flask(__name__)
 
