@@ -10,4 +10,4 @@ ENTRYPOINT [ "python" ]
 
 EXPOSE 5000
 
-CMD ["app/main.py"]
+CMD ["app/Main.py"]
