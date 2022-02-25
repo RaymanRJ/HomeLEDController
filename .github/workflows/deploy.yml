@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [ main, development ]
   workflow_dispatch:
 jobs:
   build:
@@ -10,4 +10,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build web-server
-        run: docker build -t webserver -f ./src/webserver/Dockerfile
+        working-directory: ./src/webserver
+        run: |
+          build_number=${{github.run_number}}
+          sudo docker build -t webserver .
+          sudo docker tag webserver $build_number
+          sudo docker images
+
+
