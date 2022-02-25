@@ -4,19 +4,68 @@ from app.states.StateManager import StateManager
 
 app = Flask(__name__)
 
-LEDStateManager = StateManager()
+state_manager = StateManager()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
+"""
+Sample post data:
+{
+    'state_type': LED_STATE,
+    'state_changes': {
+        'cabinets': {
+            'ALL': {
+                'led_strips': {
+                    'ALL': {
+                        leds: {
+                            'ALL':{
+                                led_details:{
+                                    r: int,
+                                    g: int,
+                                    b: int,
+                                    brightness: int
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
+OR:
 
+{
+    'state_type': LED_STATE,
+    'state_changes': {
+        'cabinets': {
+            'OUTER_LEFT': {
+                'led_strips: {
+                    UPPER_RIGHT: {
+                        leds: {
+                            0: {
+                                r: int,
+                                b: int,
+                                g: int,
+                                brightness: int
+                            },
+                            14: {
+                                r: int,
+                                ...
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+"""
 @app.route('/updateLEDs', methods=['POST'])
 def update_LEDs():
     return make_response(
         jsonify(
-            LEDStateManager.update_state(request.get_json())
+            state_manager.update_state(request.get_json())
         )
     )
 
