@@ -9,10 +9,13 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-// Webserver Config
+// Internal Webserver Config
 const char *ssid = "<<ssid>>";
 const char *password = "<<password>>";
 ESP8266WebServer server ( 80 );
+
+// External Webserver Config
+const char *external_server = "<<external server>>";
 
 // LED Strips Config
 #define LOWER_LEFT_PIN D2
@@ -157,7 +160,7 @@ void register_device(){
   
   // Send request
   http.useHTTP10(true);
-  http.begin(client, "http://192.168.0.166:5000/register");
+  http.begin(client, external_server + "/register");
   http.POST(json);
   
   // Disconnect
