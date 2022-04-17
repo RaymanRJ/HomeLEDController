@@ -10,8 +10,8 @@
 #include <ArduinoJson.h>
 
 // Internal Webserver Config
-const char *ssid = "<<ssid>>";
-const char *password = "<<password>>";
+const char *ssid = "<<SSID>>";
+const char *password = "<<SSID_PASSWORD>>";
 ESP8266WebServer server ( 80 );
 
 // External Webserver Config

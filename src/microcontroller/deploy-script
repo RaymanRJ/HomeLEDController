@@ -4,9 +4,16 @@ PROJECT=$1
 DEPLOY_LOCATION=$2
 COMPILE_LOCATION=$PROJECT/$PROJECT-compiled
 
+SSID=$SSID
+SSID_PASSWORD=$SSID_PASSWORD
+
+# Prepare Project:
+sed "s/<<SSID>>/${SSID}/g" $PROJECT/$PROJECT.ino
+sed "s/<<SSID_PASSWORD>>/${SSID_PASSWORD}/g" $PROJECT/$PROJECT.ino
+
 FQBN=esp8266:esp8266:nodemcuv2
 
-# Navigate to project:
+# Prepare location for bin file:
 mkdir ./$COMPILE_LOCATION
 
 # Compile project:
