@@ -1,0 +1,21 @@
+#!/bin/bash
+
+PROJECT=$1
+DEPLOY_LOCATION=$2
+COMPILE_LOCATION=$PROJECT/$PROJECT-compiled
+
+FQBN=esp8266:esp8266:nodemcuv2
+
+# Navigate to project:
+mkdir ./$COMPILE_LOCATION
+
+# Compile project:
+echo "Compiling project..."
+arduino-cli compile --fqbn $FQBN --output-dir ./$COMPILE_LOCATION/ $PROJECT
+
+# Deploy project:
+echo "Deploying project..."
+python3 espota.py -d -i $DEPLOY_LOCATION -f $COMPILE_LOCATION/$PROJECT.ino.bin
+
+# Cleanup
+rm -r ./$COMPILE_LOCATION
