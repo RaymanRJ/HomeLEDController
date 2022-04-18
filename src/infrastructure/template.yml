@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'HomeLEDController stack.'
+Parameters:
+  AWSKMSMasterKeyARN:
+    Type: String
+    Description: Default KMS Key
+  S3BucketName:
+    Type: String
+    Description: Default S3 Bucket Name
+  WebAppRepositoryName:
+    Type: String
+    Description: Default ECR Repository Name
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: True
+            ServerSideEncryptionByDefault:
+              KMSMasterKeyID: !Sub ${AWSKMSMasterKeyARN}
+              SSEAlgorithm: aws:kms
+      BucketName: !Sub ${S3BucketName}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      Tags:
+        - Key: Project
+          Value: HomeLEDController
+        - Key: Resource
+          Value: S3
+  
+  WebAppRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      EncryptionConfiguration:
+        EncryptionType: KMS
+        KmsKey: !Sub ${AWSKMSMasterKeyARN}
+      ImageScanningConfiguration:
+        ScanOnPush: True
+      RepositoryName: !Sub ${WebAppRepositoryName}
+      Tags:
+        - Key: Project
+          Value: HomeLEDController
+        - Key: Resource
+          Value: ECR
