@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'HomeLEDController stack.'
+Parameters:
+  S3BucketName:
+    Type: String
+    Description: Default S3 Bucket Name
+  WebAppRepositoryName:
+    Type: String
+    Description: Default ECR Repository Name
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${S3BucketName}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      Tags:
+        - Key: Project
+          Value: HomeLEDController
+        - Key: Resource
+          Value: S3
+  
+  WebAppRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      ImageScanningConfiguration:
+        ScanOnPush: True
+      RepositoryName: !Sub ${WebAppRepositoryName}
+      Tags:
+        - Key: Project
+          Value: HomeLEDController
+        - Key: Resource
+          Value: ECR
