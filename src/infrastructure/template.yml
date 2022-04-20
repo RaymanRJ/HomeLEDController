@@ -1,9 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'HomeLEDController stack.'
 Parameters:
-  AWSKMSMasterKeyARN:
-    Type: String
-    Description: Default KMS Key
   S3BucketName:
     Type: String
     Description: Default S3 Bucket Name
@@ -15,12 +12,6 @@ Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - BucketKeyEnabled: True
-            ServerSideEncryptionByDefault:
-              KMSMasterKeyID: !Sub ${AWSKMSMasterKeyARN}
-              SSEAlgorithm: aws:kms
       BucketName: !Sub ${S3BucketName}
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True
@@ -36,9 +27,6 @@ Resources:
   WebAppRepository:
     Type: AWS::ECR::Repository
     Properties:
-      EncryptionConfiguration:
-        EncryptionType: KMS
-        KmsKey: !Sub ${AWSKMSMasterKeyARN}
       ImageScanningConfiguration:
         ScanOnPush: True
       RepositoryName: !Sub ${WebAppRepositoryName}
