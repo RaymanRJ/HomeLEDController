@@ -17,6 +17,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
+        working-directory: ./src/front-end/home-led-controller
         run: npm ci
       - name: Build front-end
         working-directory: ./src/front-end/home-led-controller
