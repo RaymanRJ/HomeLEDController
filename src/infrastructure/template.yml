@@ -29,6 +29,24 @@ Resources:
     Properties:
       ImageScanningConfiguration:
         ScanOnPush: True
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                  "rulePriority": 1,
+                  "description": "Delete untagged images",
+                  "selection": {
+                      "tagStatus": "untagged",
+                      "countType": "imageCountMoreThan",
+                      "countNumber": 2
+                  },
+                  "action": {
+                      "type": "expire"
+                  }
+              }
+            ]
+          }
       RepositoryName: !Sub ${WebAppRepositoryName}
       Tags:
         - Key: Project
