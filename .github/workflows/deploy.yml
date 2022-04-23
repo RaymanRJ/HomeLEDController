@@ -14,8 +14,12 @@ jobs:
         run: |
           build_number=${{github.run_number}}
           commit_hash=${{ github.sha }}
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
           sudo docker build -t webserver .
-          sudo docker tag webserver $build_number-$commit_hash
-          sudo docker images
-
-
+          docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:latest
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:latest
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DOCKER_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DOCKER_SECRET_KEY }}
