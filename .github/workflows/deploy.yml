@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [ main, development ]
   workflow_dispatch:
 jobs:
   build:
@@ -12,14 +12,24 @@ jobs:
       - name: Build web-server
         working-directory: ./src/webserver
         run: |
+          set -x
+
+          case "${{ github.ref }}" in
+            refs/heads/development) target_tag="development" ;;
+            refs/heads/main) target_tag="production" ;;
+            *)
+              echo "unknown target ref: ${{ github.ref }}"
+              exit 1
+          esac
+
           build_number=${{github.run_number}}
           commit_hash=${{ github.sha }}
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
           sudo docker build -t webserver .
-          docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:latest
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:latest
+          docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$target_tag
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$target_tag
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_DOCKER_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_DOCKER_SECRET_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
