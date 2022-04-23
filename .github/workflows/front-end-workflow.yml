@@ -1,0 +1,36 @@
+name: Front-End CI/CD
+on:
+  push:
+    branches:
+      - main
+      - development
+    paths:
+      - src/front-end/home-led-controller
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build front-end
+        working-directory: ./src/front-end/home-led-controller
+        run: |
+          set -x
+
+          case "${{ github.ref }}" in
+            refs/heads/development) target_tag="development" ;;
+            refs/heads/main) target_tag="production" ;;
+            *)
+              echo "unknown target ref: ${{ github.ref }}"
+              exit 1
+          esac
+          PRIMARY_TAG=$target_tag
+
+          npm run build
+          aws --region $AWS_REGION s3 sync build/ s3://home-led-controller/$PRIMARY_TAG/
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}

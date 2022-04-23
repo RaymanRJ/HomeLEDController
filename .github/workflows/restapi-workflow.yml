@@ -1,7 +1,11 @@
-name: CI
+name: RESTAPI CI/CD
 on:
   push:
-    branches: [ main, development ]
+    branches:
+      - main
+      - development
+    paths:
+      - src/webserver
   workflow_dispatch:
 jobs:
   build:
@@ -24,10 +28,15 @@ jobs:
 
           build_number=${{github.run_number}}
           commit_hash=${{ github.sha }}
+          PRIMARY_TAG=$target_tag
+          SECONDARY_TAG="${target_tag}-${build_number}-${commit_hash}"
+
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
           sudo docker build -t webserver .
-          docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$target_tag
-          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$target_tag
+          docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$PRIMARY_TAG
+          docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$SECONDARY_TAG
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$PRIMARY_TAG
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$SECONDARY_TAG
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
