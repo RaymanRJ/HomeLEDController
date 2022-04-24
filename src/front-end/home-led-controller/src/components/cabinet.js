@@ -1,29 +1,37 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Box, Flex } from 'rebass';
 import { Label, Select } from '@rebass/forms'
 import { SwatchesPicker } from 'react-color';
 import LEDStrip from './led_strip';
+import getInitCabinet from '../utils/requests'
+const API = process.env.REACT_APP_API_GATEWAY
 
 export default class Cabinet extends Component {
     constructor(props){
         super(props)
+        console.log('Cabinet Constructor')
         this.id = props.id
         this.led_strips = [
-            <LEDStrip id="UPPER_LEFT"/>,
-            <LEDStrip id="UPPER_RIGHT"/>,
-            <LEDStrip id="LOWER_LEFT"/>,
-            <LEDStrip id="LOWER_RIGHT"/>
+            <LEDStrip id="UPPER_LEFT" cabinet={this.id}/>,
+            <LEDStrip id="UPPER_RIGHT" cabinet={this.id}/>,
+            <LEDStrip id="LOWER_LEFT" cabinet={this.id}/>,
+            <LEDStrip id="LOWER_RIGHT" cabinet={this.id}/>
         ]
+    }
 
-        this.state = {
-            cabinet: this.id,
-            strip_id: "ALL",
-            background: {
-                r: 0,
-                g: 0,
-                b: 0
-            }
-        }
+    componentDidMount = () => {
+        console.log('Cabinet Mounted')
+        var api = `${API}cabinetStatus/${this.id}`
+        fetch(api)
+            .then((response) => response.json())
+            .then((json) => this.setState(json))
+        // this.setState(getInitCabinet(this.id), () => {
+        //     console.log('here')
+        //     console.log(this.state)
+        //     console.log('after')
+        
+        // }
+        //     )
     }
 
     changeLEDStrip = (strip_id) => {
@@ -46,6 +54,7 @@ export default class Cabinet extends Component {
     };
 
     create_form(){
+        console.log('Cabinet Form created')
         return(
             <Box
             as='form'
@@ -65,7 +74,15 @@ export default class Cabinet extends Component {
                 </Box>
                 <Box width={1/2} px={2}>
                     <Label htmlFor='colour'>COLOUR</Label>
-                    <SwatchesPicker onChangeComplete={ (e) => this.changeColor(e) } />
+                    { 
+                        this.state 
+                        && this.state.background 
+                        && <SwatchesPicker 
+                                color={ this.state.background }
+                                onChangeComplete={ (e) => this.changeColor(e) }
+                            />
+                    }
+                    
                 </Box>
             </Flex>
         </Box>
@@ -73,6 +90,7 @@ export default class Cabinet extends Component {
     }
 
     render (){
+        console.log('Cabinet render')
         return(
             <div>
                 {this.id}

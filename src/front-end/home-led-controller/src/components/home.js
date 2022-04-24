@@ -8,11 +8,12 @@ export default class Home extends Component {
 
         this.cabinets=[
             <Cabinet id="OUTER_LEFT"/>,
-            <Cabinet id="INNER_LEFT"/>,
-            <Cabinet id="INNER_RIGHT"/>,
-            <Cabinet id="OUTER_RIGHT"/>
+            // <Cabinet id="INNER_LEFT"/>,
+            // <Cabinet id="INNER_RIGHT"/>,
+            // <Cabinet id="OUTER_RIGHT"/>
         ]
     }
+    
     render (){
         return(
             <Tiles columns={[2, null, 4]}>
