@@ -1,13 +1,8 @@
-from wsgiref.headers import Headers
-
-import flask
-from flask import Flask, Response, make_response, jsonify, request, json
-from flask_cors import CORS
+from flask import Flask, make_response, jsonify, request
 
 from states.StateManager import StateManager
 
 app = Flask(__name__)
-CORS(app)
 
 state_manager = StateManager()
 
@@ -24,6 +19,13 @@ def cabinet_status(cabinet_id: str):
         }
     }
     return jsonify(response_data), 200
+
+
+@app.route('/updateCabinet/<cabinet_id>', methods=['POST'])
+def update_cabinet(cabinet_id: str):
+    data = request.get_json()
+    print(data)
+    return jsonify({'status': 'healthy'}), 200
 
 
 @app.route('/updateLEDs', methods=['POST'])
