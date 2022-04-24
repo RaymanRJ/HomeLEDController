@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tiles } from '@rebass/layout'
+import { Flex } from 'rebass';
 import Cabinet from './cabinet';
 
 export default class Home extends Component {
@@ -13,9 +13,10 @@ export default class Home extends Component {
             <Cabinet id="OUTER_RIGHT"/>
         ]
     }
+    
     render (){
         return(
-            <Tiles columns={[2, null, 4]}>
+            <Flex mx={-2}>
                 {this.cabinets.map((cabinet) => {
                     return(
                         <div>
@@ -23,7 +24,7 @@ export default class Home extends Component {
                         </div>
                     )
                 })}
-            </Tiles>
+            </Flex>
         )
     }
 }

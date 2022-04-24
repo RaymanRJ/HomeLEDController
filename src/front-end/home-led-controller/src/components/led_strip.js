@@ -6,6 +6,7 @@ export default class LEDStrip extends Component {
     constructor(props){
         super(props)
         this.id = props.id
+        this.cabinet = props.cabinet
         this.LEDs = []
         for(var i = 0; i < 16; i++)
             this.LEDs.push(<LED id={i} />)

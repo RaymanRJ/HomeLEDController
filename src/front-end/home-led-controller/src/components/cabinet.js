@@ -1,29 +1,30 @@
 import React, { Component } from 'react';
-import { Box, Flex } from 'rebass';
+import { Box } from 'rebass';
 import { Label, Select } from '@rebass/forms'
 import { SwatchesPicker } from 'react-color';
 import LEDStrip from './led_strip';
 
+const API = process.env.REACT_APP_API_GATEWAY
+
 export default class Cabinet extends Component {
     constructor(props){
         super(props)
+        console.log('Cabinet Constructor')
         this.id = props.id
         this.led_strips = [
-            <LEDStrip id="UPPER_LEFT"/>,
-            <LEDStrip id="UPPER_RIGHT"/>,
-            <LEDStrip id="LOWER_LEFT"/>,
-            <LEDStrip id="LOWER_RIGHT"/>
+            <LEDStrip id="UPPER_LEFT" cabinet={this.id}/>,
+            <LEDStrip id="UPPER_RIGHT" cabinet={this.id}/>,
+            <LEDStrip id="LOWER_LEFT" cabinet={this.id}/>,
+            <LEDStrip id="LOWER_RIGHT" cabinet={this.id}/>
         ]
+    }
 
-        this.state = {
-            cabinet: this.id,
-            strip_id: "ALL",
-            background: {
-                r: 0,
-                g: 0,
-                b: 0
-            }
-        }
+    componentDidMount = () => {
+        console.log('Cabinet Mounted')
+        var api = `${API}cabinetStatus/${this.id}`
+        fetch(api)
+            .then((response) => response.json())
+            .then((json) => this.setState(json))
     }
 
     changeLEDStrip = (strip_id) => {
@@ -41,41 +42,53 @@ export default class Cabinet extends Component {
     }
 
     handleChangeComplete = () => {
-        console.log(this.state)
-        // TODO: Send new state to backend
+        var api = `${API}updateCabinet/${this.id}`
+        fetch(api, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify(this.state)
+        })
     };
 
     create_form(){
+        console.log('Cabinet Form created')
         return(
-            <Box
-            as='form'
-            onSubmit={e => e.preventDefault()}
-            py={3}>
-            <Flex mx={-2} mb={3}>
-                <Box width={1/2} px={2}>
-                    <Label htmlFor='ledstrip'>LED Strip</Label>
-                    <Select
-                        id='ledstrip'
-                        name='ledstrip'
-                        defaultValue='ALL'
-                        onChange={ (e) => this.changeLEDStrip(e.target.value) }>
-                        <option>ALL</option>
-                        {this.led_strips.map((strip) => { return(<option>{strip.props.id}</option>) })}
-                    </Select>
-                </Box>
-                <Box width={1/2} px={2}>
-                    <Label htmlFor='colour'>COLOUR</Label>
-                    <SwatchesPicker onChangeComplete={ (e) => this.changeColor(e) } />
-                </Box>
-            </Flex>
-        </Box>
+            <div px={2}>
+            <Box width={1} px={2}>
+                <Label htmlFor='colour'>Colour:</Label>
+                <SwatchesPicker 
+                    color={ this.state?.background }
+                    onChangeComplete={ (e) => this.changeColor(e) }
+                />
+            </Box>
+            <Box width={1} px={2}>
+                <Label htmlFor='ledstrip'>LED Strip:</Label>
+                <Select
+                    id='ledstrip'
+                    name='ledstrip'
+                    defaultValue='ALL'
+                    onChange={ (e) => this.changeLEDStrip(e.target.value) }>
+                    <option>ALL</option>
+                    {this.led_strips.map((strip) => { return(<option>{strip.props.id}</option>) })}
+                </Select>
+            </Box>
+            </div>
         )
     }
 
+    format_string(string){
+        return string.replace("_", " ")
+    }
+
     render (){
+        console.log('Cabinet render')
         return(
             <div>
-                {this.id}
+                Cabinet: {this.format_string(this.id)}
                 {this.create_form()}
             </div>
         )
