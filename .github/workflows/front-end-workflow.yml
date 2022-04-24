@@ -31,10 +31,15 @@ jobs:
               echo "unknown target ref: ${{ github.ref }}"
               exit 1
           esac
-          PRIMARY_TAG=$target_tag
 
-          npm run build
-          aws --region $AWS_REGION s3 sync build/ s3://home-led-controller/$PRIMARY_TAG/
+          if [ $target_tag = development ]
+          then
+            npm run build:development
+          else
+            npm run build:production
+          fi
+
+          aws --region $AWS_REGION s3 sync build/ s3://home-led-controller/$target_tag/
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
