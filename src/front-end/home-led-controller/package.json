@@ -21,7 +21,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build:development": "env-cmd -f ./.env.dev npm run-script build",
-    "build:production": "env-cmd -f ./.env npm run-script build" 
+    "build:production": "env-cmd -f ./.env npm run-script build"
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0"
   }
 }
