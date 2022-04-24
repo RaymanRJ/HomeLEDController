@@ -1,3 +1,6 @@
+from wsgiref.headers import Headers
+
+import flask
 from flask import Flask, Response, make_response, jsonify, request, json
 from flask_cors import CORS
 
@@ -9,22 +12,18 @@ CORS(app)
 state_manager = StateManager()
 
 
-@app.route('/cabinetStatus/<cabinetId>', methods=['GET'])
-def cabinet_status(cabinetId: str):
-    response = make_response(jsonify(
-        {
-            "cabinet": cabinetId,
-            "strip_id": "ALL",
-            "background": {
-                "r": 183,
-                "g": 28,
-                "b": 28
-            }
+@app.route('/cabinetStatus/<cabinet_id>', methods=['GET'])
+def cabinet_status(cabinet_id: str):
+    response_data = {
+        "cabinet": cabinet_id,
+        "strip_id": "ALL",
+        "background": {
+            "r": 48,
+            "g": 63,
+            "b": 159
         }
-    ), 200)
-    response.headers.set('Access-Control-Allow-Origin', '*')
-    response.headers.set('Access-Control-Allow-Credential', 'true')
-    return response
+    }
+    return jsonify(response_data), 200
 
 
 @app.route('/updateLEDs', methods=['POST'])

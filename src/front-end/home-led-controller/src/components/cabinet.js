@@ -25,13 +25,6 @@ export default class Cabinet extends Component {
         fetch(api)
             .then((response) => response.json())
             .then((json) => this.setState(json))
-        // this.setState(getInitCabinet(this.id), () => {
-        //     console.log('here')
-        //     console.log(this.state)
-        //     console.log('after')
-        
-        // }
-        //     )
     }
 
     changeLEDStrip = (strip_id) => {
@@ -74,14 +67,10 @@ export default class Cabinet extends Component {
                 </Box>
                 <Box width={1/2} px={2}>
                     <Label htmlFor='colour'>COLOUR</Label>
-                    { 
-                        this.state 
-                        && this.state.background 
-                        && <SwatchesPicker 
-                                color={ this.state.background }
-                                onChangeComplete={ (e) => this.changeColor(e) }
-                            />
-                    }
+                    <SwatchesPicker 
+                        color={ this.state?.background }
+                        onChangeComplete={ (e) => this.changeColor(e) }
+                    />
                     
                 </Box>
             </Flex>
