@@ -22,6 +22,7 @@ export default class Cabinet extends Component {
     componentDidMount = () => {
         console.log('Cabinet Mounted')
         var api = `${API}cabinetStatus/${this.id}`
+        console.log(api)
         fetch(api)
             .then((response) => response.json())
             .then((json) => this.setState(json))
