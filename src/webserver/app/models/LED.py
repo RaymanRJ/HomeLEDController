@@ -1,16 +1,16 @@
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
 
 class LED:
-    __color: Tuple[int, int, int]
+    __color: Dict[str, int]
     __brightness: int
 
-    def __init__(self, color: Tuple[int, int, int] = (0, 0, 0), brightness: int = 0):
+    def __init__(self, color: Dict[str, int], brightness: int = 0):
         self.__color = color
         self.__brightness = brightness
 
     @property
-    def color(self) -> Tuple[int, int, int]: return self.__color
+    def color(self) -> Dict[str, int]: return self.__color
     @property
     def brightness(self) -> int: return self.__brightness
 

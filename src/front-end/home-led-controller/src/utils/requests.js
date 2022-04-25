@@ -8,7 +8,6 @@ const getInitCabinet = (cabinetId) =>{
     fetch(api, {mode: 'no-cors'})
         .then((response) => response.json())
         .then((json) => resp = json)
-        .then(() => console.log(resp))
     return resp;
 }
 

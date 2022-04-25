@@ -11,7 +11,21 @@ class StateManager:
         self.__current_LED_state = LEDState()
 
     def update_state(self, requested_state: Dict) -> Tuple[int, State]:
-        state_type = requested_state['state_type']
-        if state_type == 'LED_STATE':
-            new_state = self.__current_LED_state.update_state(requested_state['state_changes'])
-            return 200, new_state
+        cabinet = requested_state['cabinet']
+        led_strip = requested_state['strip_id']
+        rgb = requested_state['background']
+        new_state = self.__current_LED_state.update_state(cabinet=cabinet, led_strip=led_strip, rgb=rgb)
+        return 200, new_state
+
+    def get_cabinet_state(self, cabinet_id: str):
+        cabinet_color = self.__current_LED_state.get_LED_color(cabinet_id)
+        status = {
+            "cabinet": cabinet_id,
+            "strip_id": "ALL",
+            "background": {
+                "r": 48,
+                "g": 63,
+                "b": 159
+            }
+        }
+        return status

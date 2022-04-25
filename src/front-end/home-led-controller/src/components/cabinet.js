@@ -9,7 +9,6 @@ const API = process.env.REACT_APP_API_GATEWAY
 export default class Cabinet extends Component {
     constructor(props){
         super(props)
-        console.log('Cabinet Constructor')
         this.id = props.id
         this.led_strips = [
             <LEDStrip id="UPPER_LEFT" cabinet={this.id}/>,
@@ -20,9 +19,7 @@ export default class Cabinet extends Component {
     }
 
     componentDidMount = () => {
-        console.log('Cabinet Mounted')
         var api = `${API}cabinetStatus/${this.id}`
-        console.log(api)
         fetch(api)
             .then((response) => response.json())
             .then((json) => this.setState(json))
@@ -43,7 +40,7 @@ export default class Cabinet extends Component {
     }
 
     handleChangeComplete = () => {
-        var api = `${API}updateCabinet/${this.id}`
+        var api = `${API}updateCabinet`
         fetch(api, {
             method: 'POST',
             headers: {
@@ -56,7 +53,6 @@ export default class Cabinet extends Component {
     };
 
     create_form(){
-        console.log('Cabinet Form created')
         return(
             <div px={2}>
             <Box width={1} px={2}>
@@ -86,7 +82,6 @@ export default class Cabinet extends Component {
     }
 
     render (){
-        console.log('Cabinet render')
         return(
             <div>
                 Cabinet: {this.format_string(this.id)}
