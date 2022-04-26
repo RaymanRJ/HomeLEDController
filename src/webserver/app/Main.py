@@ -1,6 +1,7 @@
 from flask import Flask, make_response, jsonify, request
 from flask_cors import CORS
-from states.StateManager import StateManager
+
+from app.managers.StateManager import StateManager
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)

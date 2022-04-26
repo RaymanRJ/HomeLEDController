@@ -7,10 +7,13 @@ from models.LEDStripLocation import LEDStripLocation
 from states.LEDChangeSet import LEDChangeSet, LEDChange
 from states.State import State
 
+from database.database import Database
+
 
 class LEDState(State):
 
     __cabinets: Dict[LEDCabinetLocation, LEDCabinet] = dict()
+    __db: Database
 
     def __init__(self):
         # TODO: This should be populated by reading from a config file, with defaults. Right now this is for testing.
@@ -19,6 +22,7 @@ class LEDState(State):
             for led_location in LEDStripLocation:
                 led_locations[led_location] = LEDStrip()
             self.__cabinets[cabinet_location] = LEDCabinet(led_locations)
+            self.__db = Database.db
 
     def get_LED_color(self, cabinet_id: str):
         led_cabinet_location = LEDCabinetLocation[cabinet_id]
