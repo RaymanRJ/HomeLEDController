@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# TODO: Instead of building, we should be pulling new images from ECR
-# Build image:
-sudo docker build -t web-server .
+# This script will deploy to the webserver machine. It will create a cronjob
+# to check for updates to the image periodically.
+# Once an update is detected, the job will download the new image,
+# kill the live one, and start the new image.
 
-# Start container:
-sudo docker run -d -p 0.0.0.0:5000:5000 -v /app/web-server-data:/app/web-server-data/ web-server
+IMAGE_NAME=$AWSACCOUNT.dkr.$AWSREGION.amazonaws.com/$AWSREPO:development
+
+# Start image:
+sudo docker run -d -p 0.0.0.0:5000:5000 -v /app/web-server-data:/app/web-server-data/ $IMAGE_NAME

@@ -13,6 +13,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Upload config files
+        run: |
+          aws s3 cp ./src/webserver/start.sh s3://home-led-controller/config/
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+
+      - name: Set up Docker for linux/arm/v7 (Raspberry Pi) builds
+        run: |
+          docker run --privileged --rm tonistiigi/binfmt --install all
+
       - name: Build web-server
         working-directory: ./src/webserver
         run: |
@@ -32,7 +45,7 @@ jobs:
           SECONDARY_TAG="${target_tag}-${build_number}-${commit_hash}"
 
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-          sudo docker build -t webserver .
+          sudo docker buildx build --platform linux/arm/v7 -t webserver .
           docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$PRIMARY_TAG
           docker tag webserver:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$SECONDARY_TAG
           docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/home-led-controller:$PRIMARY_TAG
