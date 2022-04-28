@@ -16,12 +16,6 @@ export default class Cabinet extends Component {
             "LOWER_LEFT": new LEDStrip("LOWER_LEFT", this.id),
             "LOWER_RIGHT": new LEDStrip("LOWER_RIGHT", this.id)
         }
-        // this.led_strips = [
-        //     new LEDStrip ("UPPER_LEFT", this.id),
-        //     new LEDStrip ("UPPER_RIGHT", this.id),
-        //     new LEDStrip ("LOWER_LEFT", this.id),
-        //     new LEDStrip ("LOWER_RIGHT", this.id)
-        // ]
 
         this.state = {
             background: '',
@@ -126,7 +120,6 @@ export default class Cabinet extends Component {
                                 return(<option>{key}</option>) 
                             })
                         }
-                        {/* {this.led_strips.kmap((strip) => { return(<option>{strip.id}</option>) })} */}
                     </Select>
                 </Box>
                 <Box width={1/4} px={2}>

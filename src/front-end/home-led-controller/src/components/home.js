@@ -8,9 +8,9 @@ export default class Home extends Component {
 
         this.cabinets=[
             <Cabinet id="OUTER_LEFT"/>,
-            // <Cabinet id="INNER_LEFT"/>,
-            // <Cabinet id="INNER_RIGHT"/>,
-            // <Cabinet id="OUTER_RIGHT"/>
+            <Cabinet id="INNER_LEFT"/>,
+            <Cabinet id="INNER_RIGHT"/>,
+            <Cabinet id="OUTER_RIGHT"/>
         ]
     }
     
