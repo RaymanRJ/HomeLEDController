@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Box } from 'rebass';
-import { Label, Select } from '@rebass/forms'
+import { Label, Select, Checkbox } from '@rebass/forms'
 import { SwatchesPicker } from 'react-color';
 import LEDStrip from './led_strip';
 
@@ -10,35 +10,73 @@ export default class Cabinet extends Component {
     constructor(props){
         super(props)
         this.id = props.id
-        this.led_strips = [
-            <LEDStrip id="UPPER_LEFT" cabinet={this.id}/>,
-            <LEDStrip id="UPPER_RIGHT" cabinet={this.id}/>,
-            <LEDStrip id="LOWER_LEFT" cabinet={this.id}/>,
-            <LEDStrip id="LOWER_RIGHT" cabinet={this.id}/>
-        ]
+        this.led_strips = {
+            "UPPER_LEFT": new LEDStrip("UPPER_LEFT", this.id),
+            "UPPER_RIGHT": new LEDStrip("UPPER_RIGHT", this.id),
+            "LOWER_LEFT": new LEDStrip("LOWER_LEFT", this.id),
+            "LOWER_RIGHT": new LEDStrip("LOWER_RIGHT", this.id)
+        }
+
+        this.state = {
+            background: '',
+            selectDisabled: false,
+            selectedLEDStrip: this.led_strips["UPPER_LEFT"],
+            lastSelectedLEDStrip: this.led_strips["UPPER_LEFT"]
+        }
     }
 
     componentDidMount = () => {
-        var api = `${API}cabinetStatus/${this.id}`
-        fetch(api)
-            .then((response) => response.json())
-            .then((json) => this.setState(json))
+        this.setState(
+            {
+                selectDisabled: false,
+                selectedLEDStrip: this.led_strips["UPPER_LEFT"],
+                background: this.getBackground()
+            }
+        )
     }
 
     changeLEDStrip = (strip_id) => {
         this.setState(
-            { cabinet: this.state.cabinet, strip_id: strip_id, background: this.state.background },
-            () => this.handleChangeComplete()
+            {
+                ...this.state,
+                lastSelectedLEDStrip: this.state.selectedLEDStrip,
+                selectedLEDStrip: this.led_strips[strip_id],
+            }, () => this.handleChangeComplete()
         )
     }
 
-    changeColor = (color) => {
+    changeColour = (colour) => {
+        if (this.state.selectDisabled)
+            this.setState({
+                ...this.state,
+                background: colour
+            },
+            () => this.handleChangeComplete())
+        else{
+            this.state.selectedLEDStrip.changeColour(colour)
+            this.setState({
+                ...this.state,
+                background: colour
+            }, () => this.handleChangeComplete())
+        }
+    }
+
+    changeAllBtn = (checked) => {
         this.setState(
-            { cabinet: this.state.cabinet, strip_id: this.state.strip_id, background: color.rgb },
-            () => this.handleChangeComplete()
+            { 
+                ...this.state,
+                selectDisabled: checked,
+                lastSelectedLEDStrip: this.state.selectedLEDStrip,
+                selectedLEDStrip: checked ? 'ALL' : this.state.lastSelectedLEDStrip
+             },
+             () => this.handleChangeComplete()
         )
     }
 
+    getBackground(){
+        return this.state.selectedLEDStrip.Colour ?? "000"
+    }
+    
     handleChangeComplete = () => {
         var api = `${API}updateCabinet`
         fetch(api, {
@@ -48,7 +86,10 @@ export default class Cabinet extends Component {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify({
+                ...this.state,
+                cabinet_id: this.id
+            })
         })
     };
 
@@ -57,21 +98,36 @@ export default class Cabinet extends Component {
             <div px={2}>
             <Box width={1} px={2}>
                 <Label htmlFor='colour'>Colour:</Label>
-                <SwatchesPicker 
-                    color={ this.state?.background }
-                    onChangeComplete={ (e) => this.changeColor(e) }
-                />
+                { 
+                    this.state ? 
+                        <SwatchesPicker 
+                            color={ this.state.background }
+                            onChangeComplete={ (e) => this.changeColour(e) }
+                        />
+                    : null 
+                }
             </Box>
             <Box width={1} px={2}>
-                <Label htmlFor='ledstrip'>LED Strip:</Label>
-                <Select
-                    id='ledstrip'
-                    name='ledstrip'
-                    defaultValue='ALL'
-                    onChange={ (e) => this.changeLEDStrip(e.target.value) }>
-                    <option>ALL</option>
-                    {this.led_strips.map((strip) => { return(<option>{strip.props.id}</option>) })}
-                </Select>
+                <Box width={3/4} px={2}>
+                    <Label htmlFor='ledstrip'>LED Strip:</Label>
+                    <Select
+                        id='ledstrip'
+                        name='ledstrip'
+                        onChange={ (e) => this.changeLEDStrip(e.target.value) }
+                        disabled={ this.state?.selectDisabled }>
+                        {
+                            Object.keys(this.led_strips).map((key) => {
+                                return(<option>{key}</option>) 
+                            })
+                        }
+                    </Select>
+                </Box>
+                <Box width={1/4} px={2}>
+                    <Label>
+                        <Checkbox id='allbtn' name='allbtn' onChange={ (e) => this.changeAllBtn(e.target.checked)}/>
+                        All
+                    </Label>
+                </Box>
             </Box>
             </div>
         )

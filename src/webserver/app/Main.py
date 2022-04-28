@@ -7,9 +7,19 @@ CORS(app, support_credentials=True)
 state_manager = StateManager()
 
 
-@app.route('/cabinetStatus/<cabinet_id>', methods=['GET'])
-def cabinet_status(cabinet_id: str):
+@app.route('/cabinetStatus/', methods=['GET'])
+def cabinet_status():
+    cabinet_id = request.args.get('cabinet')
     response_data = jsonify(state_manager.get_cabinet_state(cabinet_id))
+    response_data.access_control_allow_origin = '*'
+    return response_data, 200
+
+
+@app.route('/ledStatus', methods=['GET'])
+def led_status():
+    cabinet_id = request.args.get('cabinet')
+    strip_id = request.args.get('strip')
+    response_data = jsonify(state_manager.get_led_strip_status(cabinet_id, strip_id))
     response_data.access_control_allow_origin = '*'
     return response_data, 200
 

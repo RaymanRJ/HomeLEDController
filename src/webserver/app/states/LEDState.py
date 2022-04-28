@@ -24,9 +24,9 @@ class LEDState(State):
         led_cabinet_location = LEDCabinetLocation[cabinet_id]
         return self.__cabinets[led_cabinet_location].led_strips[0].leds[0].color
 
-    def update_state(self, cabinet: str, led_strip: str, rgb: Dict[str, int]) -> State:
+    def update_state(self, cabinet: str, led_strip: Dict[str, str], rgb: Dict[str, int]) -> State:
         led_cabinet = LEDCabinetLocation[cabinet]
-        led_strip_location = LEDStripLocation[led_strip]
+        led_strip_location = LEDStripLocation.ALL if led_strip == "ALL" else LEDStripLocation[led_strip['id']]
         # TODO: Pass params to micrcontrollers - 'execute_change' method
         return {
             'background': rgb,
