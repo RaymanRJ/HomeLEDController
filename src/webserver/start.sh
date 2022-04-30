@@ -12,7 +12,7 @@ AWSACCOUNT=<<AWSACCOUNT>>
 AWSREGION=<<AWSREGION>>
 AWSREPO=home-led-controller
 
-aws ecr get-login-password --region \$AWSREGION | docker login --username AWS --password-stdin \$AWSACCOUNT.dkr.ecr.\$AWSREGION.amazonaws.com
+aws ecr get-login-password --region \$AWSREGION | sudo docker login --username AWS --password-stdin \$AWSACCOUNT.dkr.ecr.\$AWSREGION.amazonaws.com
 
 IMAGE_NAME=\"\$AWSACCOUNT.dkr.ecr.\$AWSREGION.amazonaws.com/\$AWSREPO:development\"
 
@@ -26,7 +26,7 @@ echo \"LATEST_IMAGE=\$LATEST_IMAGE\"
 
 if [ \$LIVE_IMAGE = \$LATEST_IMAGE ]
 then
-    echo "Image is current."
+    echo "Image is current."        
     exit 0
 fi
 
@@ -41,7 +41,7 @@ sudo docker kill \$LIVE_CONTAINER
 # Start new image:
 sudo docker run -d -p 0.0.0.0:5000:5000 -v /app/web-server-data:/app/web-server-data/ \$IMAGE_NAME
 
-""" > update-web-server.sh
+""" > update-web-server-cron-job.sh
 
-echo "*/5 * * * * sh $(pwd)/update-web-server.sh >> $(pwd)/update-web-server.log 2>&1" > update-cron
+echo "*/5 * * * * sh $(pwd)/update-web-server-cron-job.sh >> $(pwd)/update-web-server.log 2>&1" > update-cron
 crontab update-cron

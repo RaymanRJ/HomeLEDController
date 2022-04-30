@@ -17,13 +17,15 @@ export default class Home extends Component {
     render (){
         return(
             <Flex mx={-2}>
-                {this.cabinets.map((cabinet) => {
-                    return(
-                        <div>
-                            {cabinet}
-                        </div>
-                    )
-                })}
+                {
+                    this.cabinets.map((cabinet) => {
+                        return(
+                            <div key={cabinet}>
+                                {cabinet}
+                            </div>
+                        )
+                    })
+                }
             </Flex>
         )
     }

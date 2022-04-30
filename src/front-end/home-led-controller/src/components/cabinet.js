@@ -3,6 +3,7 @@ import { Box } from 'rebass';
 import { Label, Select, Checkbox } from '@rebass/forms'
 import { SwatchesPicker } from 'react-color';
 import LEDStrip from './led_strip';
+import { handleChangeComplete } from '../utils/requests';
 
 const API = process.env.REACT_APP_API_GATEWAY
 
@@ -28,9 +29,10 @@ export default class Cabinet extends Component {
     componentDidMount = () => {
         this.setState(
             {
+                background: this.getBackground(),
                 selectDisabled: false,
                 selectedLEDStrip: this.led_strips["UPPER_LEFT"],
-                background: this.getBackground()
+                lastSelectedLEDStrip: this.led_strips["UPPER_LEFT"]
             }
         )
     }
@@ -41,7 +43,7 @@ export default class Cabinet extends Component {
                 ...this.state,
                 lastSelectedLEDStrip: this.state.selectedLEDStrip,
                 selectedLEDStrip: this.led_strips[strip_id],
-            }, () => this.handleChangeComplete()
+            }, () => handleChangeComplete(this.state, this.id)
         )
     }
 
@@ -50,14 +52,13 @@ export default class Cabinet extends Component {
             this.setState({
                 ...this.state,
                 background: colour
-            },
-            () => this.handleChangeComplete())
+            }, () => handleChangeComplete(this.state, this.id))
         else{
             this.state.selectedLEDStrip.changeColour(colour)
             this.setState({
                 ...this.state,
                 background: colour
-            }, () => this.handleChangeComplete())
+            }, () => handleChangeComplete(this.state, this.id))
         }
     }
 
@@ -68,30 +69,13 @@ export default class Cabinet extends Component {
                 selectDisabled: checked,
                 lastSelectedLEDStrip: this.state.selectedLEDStrip,
                 selectedLEDStrip: checked ? 'ALL' : this.state.lastSelectedLEDStrip
-             },
-             () => this.handleChangeComplete()
+            }, () => handleChangeComplete(this.state, this.id)
         )
     }
 
     getBackground(){
         return this.state.selectedLEDStrip.Colour ?? "000"
     }
-    
-    handleChangeComplete = () => {
-        var api = `${API}updateCabinet`
-        fetch(api, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
-            },
-            body: JSON.stringify({
-                ...this.state,
-                cabinet_id: this.id
-            })
-        })
-    };
 
     create_form(){
         return(
@@ -117,7 +101,7 @@ export default class Cabinet extends Component {
                         disabled={ this.state?.selectDisabled }>
                         {
                             Object.keys(this.led_strips).map((key) => {
-                                return(<option>{key}</option>) 
+                                return(<option key={key}>{key}</option>) 
                             })
                         }
                     </Select>

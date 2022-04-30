@@ -1,4 +1,5 @@
 import LED from './led';
+import { getLEDStripColour } from '../utils/requests';
 
 const API = process.env.REACT_APP_API_GATEWAY
 
@@ -7,24 +8,14 @@ export default class LEDStrip {
     constructor(id, cabinet){
         this.id = id
         this.cabinet = cabinet
-        this.Colour = null
         this.LEDs = []
         for(var i = 0; i < 16; i++)
             this.LEDs.push(<LED id={i} />)
         
-        this.setup()
+        this.Colour = getLEDStripColour(cabinet, id)
     }
 
     changeColour(colour){
         this.Colour = colour
-    }
-
-    setup(){
-        var api = `${API}ledStatus?cabinet=${this.cabinet}&strip=${this.id}`
-        fetch(api)
-            .then((response) => response.json())
-            .then((json) => {
-                this.Colour = json['background']
-            })
     }
 }
