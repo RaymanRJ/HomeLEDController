@@ -33,6 +33,13 @@ def update_cabinet():
     return response_data, 200
 
 
+@app.route('/registerDevice', methods=['POST'])
+def register_device():
+    data = request.get_json()
+    response_data = jsonify(state_manager.register_device(data))
+    response_data.access_control_allow_origin = '*'
+    return response_data, 200
+
 @app.route('/updateLEDs', methods=['POST'])
 def update_LEDs():
     return make_response(

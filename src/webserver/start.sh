@@ -13,7 +13,7 @@ then
 else
   # Create TinyDB database and grant permissions for web-server:
   sudo touch /app/web-server-data/web-server-db.json
-  sudo chmod a+rwx /app/web-server-data/web-server-db.json
+  sudo chmod 777 /app
 fi
 
 exit 4
