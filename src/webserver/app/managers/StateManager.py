@@ -42,3 +42,6 @@ class StateManager:
             }
         }
         return status
+
+    def register_device(self, device: Dict) -> Tuple[int, Dict]:
+        pass

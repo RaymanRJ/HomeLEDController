@@ -5,6 +5,23 @@
 # Once an update is detected, the job will download the new image,
 # kill the live one, and start the new image.
 
+# Does database exist?
+DATABASE=$(ls /app/web-server-data/ | wc -l)
+if [ $DATABASE = 1 ]
+then
+  echo "DATABASE EXISTS"
+else
+  # Create TinyDB database and grant permissions for web-server:
+  sudo touch /app/web-server-data/web-server-db.json
+  sudo chmod 777 /app
+fi
+
+exit 4
+
+# TODO: Instead of building, we should be pulling new images from ECR
+# Build image:
+sudo docker build -t web-server .
+
 echo """
 #!/bin/sh
 

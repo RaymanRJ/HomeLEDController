@@ -1,6 +1,7 @@
 from flask import Flask, make_response, jsonify, request
 from flask_cors import CORS
-from states.StateManager import StateManager
+
+from app.managers.StateManager import StateManager
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -31,6 +32,13 @@ def update_cabinet():
     response_data.access_control_allow_origin = '*'
     return response_data, 200
 
+
+@app.route('/registerDevice', methods=['POST'])
+def register_device():
+    data = request.get_json()
+    response_data = jsonify(state_manager.register_device(data))
+    response_data.access_control_allow_origin = '*'
+    return response_data, 200
 
 @app.route('/updateLEDs', methods=['POST'])
 def update_LEDs():
